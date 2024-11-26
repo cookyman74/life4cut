@@ -15,9 +15,11 @@ datasource db {
 
 model File {
   id        String   @id @default(uuid())
-  type      String // 파일 타입 (image/video)
   name      String // 파일 이름
-  path      String // 파일 경로
+  fileId    String // Google Drive 파일 ID
+  type      String // 파일 타입 (image or video)
+  path      String // 경로
+  expiresAt DateTime // 다운로드 만료 시간
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
