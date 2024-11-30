@@ -1,12 +1,12 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { DriveService } from '../drive/drive.service';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class FileService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly driveService: DriveService,
+    private readonly driveService: StorageService,
   ) {}
 
   // 파일 업로드 및 메타데이터 저장

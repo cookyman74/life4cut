@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common';
 import { FileService } from './file.service';
 import { FileController } from './file.controller';
 import { PrismaModule } from '../prisma/prisma.module';
-import { DriveModule } from '../drive/drive.module';
+import { StorageModule } from '../storage/storage.module';
 
 @Module({
-  imports: [PrismaModule, DriveModule],
+  imports: [PrismaModule, StorageModule],
   providers: [FileService],
   controllers: [FileController],
 })
