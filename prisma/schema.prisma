@@ -1,0 +1,25 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model File {
+  id        String   @id @default(uuid())
+  name      String // 파일 이름
+  fileId    String // Google Drive 파일 ID
+  type      String // 파일 타입 (image or video)
+  path      String // 경로
+  expiresAt DateTime // 다운로드 만료 시간
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
