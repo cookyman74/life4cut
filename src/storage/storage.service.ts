@@ -37,6 +37,7 @@ export class StorageService {
           const adapter = CloudStorageFactory.createAdapter({ provider: normalizedProvider });
           this.adapters.set(normalizedProvider, adapter);
           this.adapterList.push(adapter);
+          console.log(this.adapterList);
         } catch (error) {
           console.error(`Failed to initialize adapter for provider ${provider}:`, error);
           throw error;
@@ -67,6 +68,9 @@ export class StorageService {
     uploadResult: any,
     dto: UploadFileRequestDto,
   ): Promise<File> {
+    const storageFileName = file.originalname;
+    const [year, month, branchName, fileName] = storageFileName.split('_');
+
     try {
       return await this.prisma.file.create({
         data: {
@@ -80,8 +84,8 @@ export class StorageService {
           height: uploadResult.storageMetadata?.height,
           duration: uploadResult.storageMetadata?.duration,
           encoding: uploadResult.storageMetadata?.encoding,
-          year: dto.year || new Date().getFullYear(),
-          month: dto.month || new Date().getMonth() + 1,
+          year: +year || new Date().getFullYear(),
+          month: +month || new Date().getMonth() + 1,
           branchId: dto.branchId,
         },
       });
@@ -94,11 +98,11 @@ export class StorageService {
     }
   }
 
-  private async uploadToStorage(file: Express.Multer.File, destination: string): Promise<any> {
+  private async uploadToStorage(file: Express.Multer.File): Promise<any> {
     for (let i = 0; i < this.adapterList.length; i++) {
       const adapter = this.getNextAdapter();
       try {
-        return await adapter.upload(file, destination);
+        return await adapter.upload(file, file.originalname);
       } catch (error) {
         console.error(`Upload failed on adapter ${adapter.constructor.name}:`, error);
         if (i === this.adapterList.length - 1) {
@@ -115,7 +119,7 @@ export class StorageService {
   async uploadFile(dto: UploadFileRequestDto, file: Express.Multer.File): Promise<UploadFileResponseDto> {
     return this.prisma.$transaction(async (prisma) => {
       try {
-        const uploadResult = await this.uploadToStorage(file, dto.destination);
+        const uploadResult = await this.uploadToStorage(file);
         const fileRecord = await this.createFileRecord(file, uploadResult, dto);
 
         const storageInfo = await prisma.storageInfo.create({

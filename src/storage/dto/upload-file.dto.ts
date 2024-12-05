@@ -5,19 +5,19 @@ import { IsNotEmpty, IsString, IsOptional, IsNumber, IsInt, IsEnum } from 'class
  * 업로드 요청 DTO
  */
 export class UploadFileRequestDto {
-  @ApiProperty({
-    description: '업로드할 파일의 목적 경로',
-    example: '2024/03/서울/file.jpg',
-  })
-  @IsNotEmpty()
-  @IsString()
-  destination: string;
+  // @ApiProperty({
+  //   description: '업로드할 파일의 목적 경로',
+  //   example: '2024/03/서울/file.jpg',
+  // })
+  // @IsNotEmpty()
+  // @IsString()
+  // destination: string;
 
   @ApiProperty({
     description: '파일의 업로드 연도',
     example: 2024,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsInt()
   year: number;
 
@@ -25,7 +25,7 @@ export class UploadFileRequestDto {
     description: '파일의 업로드 월',
     example: 3,
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsInt()
   month: number;
 

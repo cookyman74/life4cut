@@ -21,6 +21,7 @@ export class AwsS3Adapter implements CloudStorageAdapter {
   private s3: S3Client;
   private bucketName: string;
   private urlCache: Map<string, SignedUrlCache> = new Map();
+  private storageType: string = 'AWS';
 
   constructor() {
     const region = process.env.AWS_REGION;
@@ -92,11 +93,29 @@ export class AwsS3Adapter implements CloudStorageAdapter {
         storageFileId: finalDestination,
         storageUrl: await this.getPublicUrl(finalDestination),
         storageMetadata,
+        storageType: this.storageType,
       };
     } catch (error) {
       throw {
         message: 'File upload failed',
         code: StorageErrorCode.UPLOAD_FAILED,
+        details: this.extractErrorDetails(error),
+      };
+    }
+  }
+
+  async download(storageFileId: string): Promise<NodeJS.ReadableStream> {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: this.bucketName,
+        Key: storageFileId,
+      });
+      const response = await this.s3.send(command);
+      return response.Body as NodeJS.ReadableStream;
+    } catch (error) {
+      throw {
+        message: 'Failed to download file',
+        code: StorageErrorCode.DOWNLOAD_FAILED,
         details: this.extractErrorDetails(error),
       };
     }

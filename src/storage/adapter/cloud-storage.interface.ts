@@ -75,6 +75,7 @@ export interface StorageUploadResult {
   storageFileId: string;          // 스토리지에서 생성된 파일 ID
   storageUrl?: string;            // 스토리지 접근 URL (옵션)
   storageMetadata: StorageMetadata; // 스토리지 메타데이터
+  storageType: string;
 }
 
 /**

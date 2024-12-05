@@ -7,6 +7,7 @@ export enum StorageType {
   GOOGLE = 'google',
   AWS = 'aws',
   AZURE = 'azure',
+  LOCAL = 'local'
 }
 
 export interface CloudStorageConfig {

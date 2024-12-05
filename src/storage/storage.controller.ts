@@ -61,6 +61,10 @@ export class StorageController {
           type: 'string',
           example: 'branch1',
         },
+        type: {
+          type: 'string',
+          example: 'image',
+        },
       },
     },
   })

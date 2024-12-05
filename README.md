@@ -97,3 +97,38 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+
+GOOGLE_CLOUD_BUCKET_NAME=life4cut
+
+# Application Settings
+NODE_ENV=development
+PORT=3000
+API_PREFIX=/api
+
+# Database Configuration
+DATABASE_URL=postgresql://<username>:<password>@<host>:<port>/<database_name>
+
+# Cloud Providers
+ENABLED_CLOUD_PROVIDERS=google,aws,azure
+
+# Google Cloud Storage
+GCP_BUCKET_NAME=life4cut
+GCP_CREDENTIALS=path/to/google/credentials.json
+
+# AWS S3
+AWS_BUCKET_NAME=your-aws-bucket-name
+AWS_REGION=your-aws-region
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+
+# Azure Blob Storage
+AZURE_STORAGE_CONNECTION_STRING=your-azure-connection-string
+AZURE_CONTAINER_NAME=your-azure-container-name
+
+# JWT Configuration (if applicable)
+JWT_SECRET=your-jwt-secret
+JWT_EXPIRATION_TIME=3600
+
+# CORS Settings
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://example.com

@@ -18,6 +18,7 @@ export class GoogleCloudStorageAdapter implements CloudStorageAdapter {
   private storage: Storage;
   private bucketName: string;
   private urlCache: Map<string, SignedUrlCache> = new Map();
+  private storageType: string = 'GOOGLE';
 
   constructor() {
     const credentials = process.env.GCP_CREDENTIALS;
@@ -100,6 +101,7 @@ export class GoogleCloudStorageAdapter implements CloudStorageAdapter {
                 storageFileId: finalDestination,
                 storageUrl: `https://storage.googleapis.com/${this.bucketName}/${finalDestination}`,
                 storageMetadata,
+                storageType: this.storageType,
               });
             } catch (error) {
               reject({
@@ -122,6 +124,20 @@ export class GoogleCloudStorageAdapter implements CloudStorageAdapter {
       throw {
         message: 'File upload failed',
         code: StorageErrorCode.UPLOAD_FAILED,
+        details: this.extractErrorDetails(error),
+      };
+    }
+  }
+
+  async download(storageFileId: string): Promise<NodeJS.ReadableStream> {
+    try {
+      const bucket = this.storage.bucket(this.bucketName);
+      const file = bucket.file(storageFileId);
+      return file.createReadStream();
+    } catch (error) {
+      throw {
+        message: 'Failed to download file',
+        code: StorageErrorCode.DOWNLOAD_FAILED,
         details: this.extractErrorDetails(error),
       };
     }

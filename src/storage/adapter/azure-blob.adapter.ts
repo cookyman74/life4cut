@@ -20,6 +20,7 @@ export class AzureBlobStorageAdapter implements CloudStorageAdapter {
   private blobServiceClient: BlobServiceClient;
   private containerName: string;
   private urlCache: Map<string, SignedUrlCache> = new Map();
+  private storageType: string = 'AZURE';
 
   constructor() {
     const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
@@ -98,6 +99,7 @@ export class AzureBlobStorageAdapter implements CloudStorageAdapter {
         storageFileId: finalDestination,
         storageUrl: await this.getPublicUrl(finalDestination),
         storageMetadata,
+        storageType: this.storageType,
       };
     } catch (error) {
       throw {
@@ -107,6 +109,21 @@ export class AzureBlobStorageAdapter implements CloudStorageAdapter {
       };
     }
   }
+
+  async download(storageFileId: string): Promise<NodeJS.ReadableStream> {
+    try {
+      const containerClient = this.blobServiceClient.getContainerClient(this.containerName);
+      const blobClient = containerClient.getBlobClient(storageFileId);
+      const downloadResponse = await blobClient.download();
+      return downloadResponse.readableStreamBody as NodeJS.ReadableStream;
+    } catch (error) {
+      throw {
+        message: 'Failed to download file',
+        code: StorageErrorCode.DOWNLOAD_FAILED,
+        details: this.extractErrorDetails(error),
+      };
+    }
+  };
 
   async delete(storageFileId: string): Promise<void> {
     try {
